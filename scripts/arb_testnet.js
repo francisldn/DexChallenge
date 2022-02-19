@@ -62,7 +62,7 @@ async function executeArb(token0, token1, router0, router1, amount) {
         
         token0BalAfter = await contract.getTokenBalance(token0);
         await contract.connect(signer).withdrawToken(token0,signer.address);
-        profit = Number(token0BalAfter)/1e18 - Number(token0BalBefore)/1e18; 
+        profit = (Number(token0BalAfter) - Number(token0BalBefore))/1e18; 
 
         console.log(`You have a ${tokenSymbol0} balance of ${(Number(token0BalAfter)/1e18).toFixed(4)} after executing arb.` )
         console.log(`You have made ${profit.toFixed(4)} in profit.`)
