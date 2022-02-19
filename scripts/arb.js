@@ -22,6 +22,7 @@ const Cynthia_WETH = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
 let amount0 = web3.utils.toBN('1000000000000000000').toString();
 let arb;
 
+// function to execute maxArbitragePossible function and display a log in terminal
 async function getMaxArbitragePossible(token0, token1, router0, router1, amount0) {
     const contractFactory = await ethers.getContractFactory("GSRChallenge2PoolArbitrage");
     const contract = await contractFactory.deploy();
@@ -44,6 +45,8 @@ async function getMaxArbitragePossible(token0, token1, router0, router1, amount0
     }
 }
 
+// function that execute maxArbitragePossible function, deposit token0 and execute arbitrage, return token balance in the contract and profit
+// note that profit could be negative even with positive arbitrage opportunity due to slippage
 async function executeArb(token0, token1, router0, router1, signerAdd, amount) {
 
     await hre.network.provider.request({

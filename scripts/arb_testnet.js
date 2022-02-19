@@ -18,6 +18,7 @@ let router1 = router.rinkeby.Sushiswap;
 let amount0 = web3.utils.toBN('100000000000000000').toString();
 let arb;
 
+// function to execute maxArbitragePossible function and display a log in terminal
 async function getMaxArbitragePossible(token0, token1, router0, router1, amount0) {
     const [signer] = await ethers.getSigners(); 
     const contract = new ethers.Contract(contractAdd, contractABI, signer);
@@ -39,6 +40,8 @@ async function getMaxArbitragePossible(token0, token1, router0, router1, amount0
     }
 }
 
+// function that execute maxArbitragePossible function, deposit token0 and execute arbitrage, return token balance in the contract and profit
+// note that profit could be negative even with positive arbitrage opportunity due to slippage
 async function executeArb(token0, token1, router0, router1, amount) {
     const [signer] = await ethers.getSigners(); 
     const contract = new ethers.Contract(contractAdd, contractABI, signer);
