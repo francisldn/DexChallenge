@@ -14,7 +14,7 @@ let factory0 = factory.mainnet.Uniswap;
 let factory1 = factory.mainnet.Sushiswap;
 let router0 = router.mainnet.Uniswap;
 let router1 = router.mainnet.Sushiswap;
-//get an impersonated accounts;
+//get impersonated accounts;
 const Bob_BAT = '0xd265a63806064885acb25e99ccbb76a3e7c96f4f'; //for BAT
 const Alice_DAI = '0x6B175474E89094C44Da98b954EedeAC495271d0F'; // for DAI token
 const Cynthia_WETH = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
