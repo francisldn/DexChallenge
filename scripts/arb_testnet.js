@@ -14,7 +14,7 @@ let factory0 = factory.rinkeby.Uniswap;
 let factory1 = factory.rinkeby.Sushiswap;
 let router0 = router.rinkeby.Uniswap;
 let router1 = router.rinkeby.Sushiswap;
-// 1 ETH
+// 0.1 ETH
 let amount0 = web3.utils.toBN('100000000000000000').toString();
 let arb;
 
