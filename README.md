@@ -3,11 +3,16 @@
 * get the max arbitrage between 2 DEX's liquidity pools using ``maxArbitragePossible`` function
 * execute arbitrage between 2 DEX's liqudity pools using `executeArb` function
 
+# How to Start
+1. Run ``git clone`` on this repo
+2. Then ``cd DexChallenge`` directory
+3. Run ``npm install`` to install all the dependencies
+4. Then follow the steps below to execute the scripts in the scripts folder
+
 # How to execute
 ## Execute on Rinkeby testnet
 You can execute the functions in the smart contract on Rinkeby testnet through the steps below:
-1. Configure networks in the ``hardhat.config.js`` file, as below. Set up a ``.env`` file to store ``ALCHEMY_API_KEY`` and ``PRIVATE_KEY``.
-
+1. Configure networks in the ``hardhat.config.js`` file, as below. Set up a ``.env`` file to store ``ALCHEMY_API_KEY`` and ``PRIVATE_KEY``
 ```
 module.exports = {
   defaultNetwork:'hardhat',
