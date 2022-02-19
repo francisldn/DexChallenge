@@ -18,6 +18,7 @@ let router1 = router.mainnet.Sushiswap;
 const Bob_BAT = '0xd265a63806064885acb25e99ccbb76a3e7c96f4f'; //for BAT
 const Alice_DAI = '0x6B175474E89094C44Da98b954EedeAC495271d0F'; // for DAI token
 const Cynthia_WETH = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
+// 1 ETH
 let amount0 = web3.utils.toBN('1000000000000000000').toString();
 let arb;
 
