@@ -38,7 +38,7 @@ npx hardhat run scripts/arb_testnet.js --network rinkeby
 4. Once executed, you should be able to see the following message in terminal if a liquidity pool exists between the token pair on Dex0 and Dex1
 
 ```
-Arbitrage profit of <10> exists between TOKEN0 and TOKEN1. TOKEN0/TOKEN1 price is <123> on Dex0 and <125> on Dex1
+Arbitrage profit of <ARB> exists between <TOKEN0> and <TOKEN1>. <TOKEN0>/<TOKEN1> price is <PRICE0> on Dex0 and <PRICE1> on Dex1
 ```
 
 ## Execute on Mainnet Fork
