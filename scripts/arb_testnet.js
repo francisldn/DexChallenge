@@ -6,10 +6,10 @@ const factory = require('../Addresses/factory.json');
 const tokens = require('../Addresses/tokens.json');
 const web3 = require('web3');
 
-const contractAdd = '0x35C7d483e2df63e720Fa766a78a76eACf65fC641'
+const contractAdd = '0x0dc1A995798CC0Dc738812DC5d6A54A25386EFe9'
 let contractABI = GSRChallenge2PoolArbitrage.abi;
 let token0 = tokens.rinkeby.WETH;
-let token1 = tokens.rinkeby.UNI;
+let token1 = tokens.rinkeby.ZRX;
 let factory0 = factory.rinkeby.Uniswap;
 let factory1 = factory.rinkeby.Sushiswap;
 let router0 = router.rinkeby.Uniswap;
@@ -58,7 +58,7 @@ async function executeArb(token0, token1, router0, router1, amount) {
         token0BalBefore = await contract.getTokenBalance(token0);
         console.log(`Initial ${tokenSymbol0} balance of ${Number(token0BalBefore)/1e18} before arb.` )
         result = await contract.connect(signer).executeArb(token0, token1, router0, router1, amount);
-        await result.wait(4);
+        await result.wait(2);
         
         token0BalAfter = await contract.getTokenBalance(token0);
         await contract.connect(signer).withdrawToken(token0,signer.address);
@@ -73,5 +73,5 @@ async function executeArb(token0, token1, router0, router1, amount) {
         
 }
 
-getMaxArbitragePossible(token0, token1, router0, router1);
-// executeArb(token0, token1, router0, router1, amount0);
+// getMaxArbitragePossible(token0, token1, router0, router1);
+executeArb(token0, token1, router0, router1, amount0);

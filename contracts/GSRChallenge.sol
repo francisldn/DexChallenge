@@ -1,7 +1,6 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.7;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "hardhat/console.sol";
 
@@ -51,7 +50,7 @@ interface IUniswapV2Router02 {
         returns (uint256[] memory amounts);
 }
 
-contract GSRChallenge2PoolArbitrage is Ownable {
+contract GSRChallenge2PoolArbitrage {
     function maxArbitragePossible(
         address _token0,
         address _token1,
@@ -69,7 +68,7 @@ contract GSRChallenge2PoolArbitrage is Ownable {
         address _router0,
         address _router1,
         uint256 _amount0
-    ) external onlyOwner returns (uint256 amountOut, uint256 arbProfit) {
+    ) external returns (uint256 amountOut, uint256 arbProfit) {
         (uint256 price0, uint256 price1) = maxArbitragePossible(
             _token0,
             _token1,
@@ -106,7 +105,7 @@ contract GSRChallenge2PoolArbitrage is Ownable {
         }
     }
 
-    function withdrawToken(address token, address to) public onlyOwner {
+    function withdrawToken(address token, address to) public {
         require(
             ERC20(token).transfer(to, ERC20(token).balanceOf(address(this))),
             "transfer_failed"
