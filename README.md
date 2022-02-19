@@ -55,3 +55,7 @@ npx hardhat run scripts/arb.js --network hardhat
 * ``Addresses/router.json`` contains UniSwap and SushiSwap router addresses on Mainnet and Rinkeby testnet
 * ``Addresses/tokens.json`` contains token pairs addresses for which liquidity pools exist on UniSwap and SushiSwap Mainnet and Rinkeby testnet
 
+For mainnet forking purpose, a number of impersonated accounts have been used to run arbitrage, such as 
+* Cynthia_WETH: ``0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2`` for WETH token
+* Bob_BAT: ``0xd265a63806064885acb25e99ccbb76a3e7c96f4f`` for BAT token
+* Alice_DAI: ``0x6B175474E89094C44Da98b954EedeAC495271d0F`` for DAI token
