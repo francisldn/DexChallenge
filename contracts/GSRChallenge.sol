@@ -2,7 +2,6 @@
 pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "hardhat/console.sol";
 
 interface IUniswapV2Pair {
     function getReserves()
@@ -55,11 +54,21 @@ contract GSRChallenge2PoolArbitrage {
         address _token0,
         address _token1,
         address _router0,
-        address _router1
-    ) public view returns (uint256 price0, uint256 price1) {
+        address _router1,
+        uint256 _amount0In
+    )
+        public
+        view
+        returns (
+            uint256 price0,
+            uint256 price1,
+            uint256 arb
+        )
+    {
         // Implement code to calculate the maximum amount of arbitrage that can be traded for
-        price0 = _getPrice2(_token0, _token1, _router0);
-        price1 = _getPrice2(_token0, _token1, _router1);
+        price0 = _getPrice2(_token0, _token1, _router0, _amount0In);
+        price1 = _getPrice2(_token0, _token1, _router1, _amount0In);
+        arb = price0 >= price1 ? (price0 - price1) : (price1 - price0);
     }
 
     function executeArb(
@@ -69,11 +78,12 @@ contract GSRChallenge2PoolArbitrage {
         address _router1,
         uint256 _amount0
     ) external returns (uint256 amountOut, uint256 arbProfit) {
-        (uint256 price0, uint256 price1) = maxArbitragePossible(
+        (uint256 price0, uint256 price1, ) = maxArbitragePossible(
             _token0,
             _token1,
             _router0,
-            _router1
+            _router1,
+            _amount0
         );
         uint256 arbitrage = (price0 > price1)
             ? ((price0 - price1) * 100) / price0
@@ -182,13 +192,14 @@ contract GSRChallenge2PoolArbitrage {
     function _getPrice2(
         address _token0,
         address _token1,
-        address routerAdd
+        address routerAdd,
+        uint256 amountIn
     ) public view returns (uint256) {
         IUniswapV2Router02 router = IUniswapV2Router02(routerAdd);
         address[] memory path = new address[](2);
         path[0] = _token0;
         path[1] = _token1;
-        uint256[] memory result = router.getAmountsOut(1e18, path);
+        uint256[] memory result = router.getAmountsOut(amountIn, path);
         uint256 PRICE_DECIMALS = 1e18;
         return (result[1] * PRICE_DECIMALS) / result[0];
     }

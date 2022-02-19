@@ -31,7 +31,7 @@ module.exports = {
 ```
 2. Go to ``arb_testnet.js`` file in the ``scripts`` folder, specify the token pair that you wish to run arbitrage against at line 11-12 of the script. The list of token pairs available to run on Rinkeby testnet (as well as mainnet) can be found in ``Addresses/tokens.json`` file. 
    
-3. An instance of the contract has been deployed on Rinkeby testnet at ``0x0dc1A995798CC0Dc738812DC5d6A54A25386EFe9``. Run ``arb_testnet.js`` file in the ``scripts`` folder, as below. This will trigger the execution of ``getMaxArbitragePossible`` function. You can also run ``executeArb`` function if you wish to do so.
+3. An instance of the contract has been deployed on Rinkeby testnet at ``0x6f5dfAE57320af88fCa2C32Fe71D82af6Db38BFf``. Run ``arb_testnet.js`` file in the ``scripts`` folder, as below. This will trigger the execution of ``getMaxArbitragePossible`` function. You can also run ``executeArb`` function if you wish to do so.
 ```
 npx hardhat run scripts/arb_testnet.js --network rinkeby
 ```

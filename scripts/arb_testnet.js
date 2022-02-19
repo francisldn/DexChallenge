@@ -6,10 +6,10 @@ const factory = require('../Addresses/factory.json');
 const tokens = require('../Addresses/tokens.json');
 const web3 = require('web3');
 
-const contractAdd = '0x0dc1A995798CC0Dc738812DC5d6A54A25386EFe9'
+const contractAdd = '0x6f5dfAE57320af88fCa2C32Fe71D82af6Db38BFf'
 let contractABI = GSRChallenge2PoolArbitrage.abi;
 let token0 = tokens.rinkeby.WETH;
-let token1 = tokens.rinkeby.ZRX;
+let token1 = tokens.rinkeby.LINK;
 let factory0 = factory.rinkeby.Uniswap;
 let factory1 = factory.rinkeby.Sushiswap;
 let router0 = router.rinkeby.Uniswap;
@@ -18,7 +18,7 @@ let router1 = router.rinkeby.Sushiswap;
 let amount0 = web3.utils.toBN('100000000000000000').toString();
 let arb;
 
-async function getMaxArbitragePossible(token0, token1, router0, router1) {
+async function getMaxArbitragePossible(token0, token1, router0, router1, amount0) {
     const [signer] = await ethers.getSigners(); 
     const contract = new ethers.Contract(contractAdd, contractABI, signer);
     const tokenContract0 = new ethers.Contract(token0, tokenContract.abi, signer);
@@ -27,10 +27,10 @@ async function getMaxArbitragePossible(token0, token1, router0, router1) {
     let tokenSymbol1 = await tokenContract1.symbol();
 
     try {
-        let result = await contract.connect(signer).maxArbitragePossible(token0, token1, router0, router1);
-        arb = Math.abs(result[0] - result[1])/1e18;
+        let result = await contract.connect(signer).maxArbitragePossible(token0, token1, router0, router1, amount0);
+        arb = (Number(result[2])/1e18).toFixed(4);
         if(arb > 0) {
-            console.log(`Arbitrage profit of ${arb.toFixed(4)} exists between ${tokenSymbol0} and ${tokenSymbol1}. ${tokenSymbol0}/${tokenSymbol1} price is ${(Number(result[0])/1e18).toFixed(4)} on Dex0 and ${(Number(result[1])/1e18).toFixed(4)} on Dex1`);
+            console.log(`Arbitrage profit of ${arb} exists between ${tokenSymbol0} and ${tokenSymbol1}. ${tokenSymbol0}/${tokenSymbol1} price is ${(Number(result[0])/1e18).toFixed(4)} on Dex0 and ${(Number(result[1])/1e18).toFixed(4)} on Dex1`);
         } else {
             console.log("no arbitrage opportunity");
         }
@@ -73,5 +73,5 @@ async function executeArb(token0, token1, router0, router1, amount) {
         
 }
 
-// getMaxArbitragePossible(token0, token1, router0, router1);
+// getMaxArbitragePossible(token0, token1, router0, router1, amount0);
 executeArb(token0, token1, router0, router1, amount0);

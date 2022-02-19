@@ -9,7 +9,7 @@ const web3 = require('web3');
 let contractABI = GSRChallenge2PoolArbitrage.abi;
 let contractByteCode = GSRChallenge2PoolArbitrage.bytecode;
 let token0 = tokens.mainnet.WETH;
-let token1 = tokens.mainnet.POOL;
+let token1 = tokens.mainnet.DAI;
 let factory0 = factory.mainnet.Uniswap;
 let factory1 = factory.mainnet.Sushiswap;
 let router0 = router.mainnet.Uniswap;
@@ -22,7 +22,7 @@ const Cynthia_WETH = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
 let amount0 = web3.utils.toBN('1000000000000000000').toString();
 let arb;
 
-async function getMaxArbitragePossible(token0, token1, router0, router1) {
+async function getMaxArbitragePossible(token0, token1, router0, router1, amount0) {
     const contractFactory = await ethers.getContractFactory("GSRChallenge2PoolArbitrage");
     const contract = await contractFactory.deploy();
     const [signer] = await ethers.getSigners(); 
@@ -32,10 +32,10 @@ async function getMaxArbitragePossible(token0, token1, router0, router1) {
     let tokenSymbol1 = await tokenContract1.symbol();
 
     try {
-        let result = await contract.connect(signer).maxArbitragePossible(token0, token1, router0, router1);
-        arb = Math.abs(result[0] - result[1])/1e18;
+        let result = await contract.connect(signer).maxArbitragePossible(token0, token1, router0, router1, amount0);
+        arb = (Number(result[2])/1e18).toFixed(4);
         if(arb > 0) {
-            console.log(`Arbitrage profit of ${arb.toFixed(4)} exists between ${tokenSymbol0} and ${tokenSymbol1}. ${tokenSymbol0}/${tokenSymbol1} price is ${(Number(result[0])/1e18).toFixed(4)} on Dex0 and ${(Number(result[1])/1e18).toFixed(4)} on Dex1`);
+            console.log(`Arbitrage profit of ${arb} exists between ${tokenSymbol0} and ${tokenSymbol1}. ${tokenSymbol0}/${tokenSymbol1} price is ${(Number(result[0])/1e18).toFixed(4)} on Dex0 and ${(Number(result[1])/1e18).toFixed(4)} on Dex1`);
         } else {
             console.log("no arbitrage opportunity");
         }
@@ -83,5 +83,5 @@ async function executeArb(token0, token1, router0, router1, signerAdd, amount) {
         
 }
 
-getMaxArbitragePossible(token0, token1, router0, router1);
-// executeArb(token0, token1, router0, router1, Cynthia_WETH, amount0);
+// getMaxArbitragePossible(token0, token1, router0, router1, amount0);
+executeArb(token0, token1, router0, router1, Cynthia_WETH, amount0);
