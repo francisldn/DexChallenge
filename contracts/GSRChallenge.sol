@@ -76,14 +76,11 @@ contract GSRChallenge2PoolArbitrage is Ownable {
             _router0,
             _router1
         );
-        console.log("price0 is %s", price0);
-        console.log("price1 is %s", price1);
         uint256 arbitrage = (price0 > price1)
             ? ((price0 - price1) * 100) / price0
             : ((price1 - price0) * 100) / price1;
         // to check that price differential is greater than 1%
         require(arbitrage > 1, "no_arbitrage");
-        console.log("arbitrage is %s", arbitrage);
         require(
             ERC20(_token0).balanceOf(address(this)) >= _amount0,
             "insufficient_fund"
@@ -102,9 +99,6 @@ contract GSRChallenge2PoolArbitrage is Ownable {
             _swapToken(_token1, _token0, _amount1, _router0);
             amountOut = ERC20(_token0).balanceOf(address(this));
         }
-        console.log("_amount1 is %s", _amount1);
-        console.log("amountOut is %s", amountOut);
-
         if (amountOut <= _amount0) {
             arbProfit = 0;
         } else if (amountOut > _amount0) {

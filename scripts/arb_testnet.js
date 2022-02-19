@@ -6,7 +6,7 @@ const factory = require('../Addresses/factory.json');
 const tokens = require('../Addresses/tokens.json');
 const web3 = require('web3');
 
-const contractAdd = '0x954554A00eFA4EEcb0760E219c605093077E3002'
+const contractAdd = '0x35C7d483e2df63e720Fa766a78a76eACf65fC641'
 let contractABI = GSRChallenge2PoolArbitrage.abi;
 let token0 = tokens.rinkeby.WETH;
 let token1 = tokens.rinkeby.UNI;
