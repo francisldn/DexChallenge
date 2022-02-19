@@ -83,5 +83,5 @@ async function executeArb(token0, token1, router0, router1, signerAdd, amount) {
         
 }
 
-// getMaxArbitragePossible(token0, token1, router0, router1, amount0);
-executeArb(token0, token1, router0, router1, Cynthia_WETH, amount0);
+getMaxArbitragePossible(token0, token1, router0, router1, amount0);
+// executeArb(token0, token1, router0, router1, Cynthia_WETH, amount0);
