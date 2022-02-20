@@ -98,7 +98,7 @@ contract GSRChallenge2PoolArbitrage {
         address _token2,
         address _router,
         uint256 amountIn
-    ) public view returns (uint256 arbProfit, uint256 newToken0Balance) {
+    ) external view returns (uint256 arbProfit, uint256 newToken0Balance) {
         require(
             _token0 != address(0) &&
                 _token1 != address(0) &&
@@ -189,7 +189,7 @@ contract GSRChallenge2PoolArbitrage {
     }
 
     ///@notice enable user to withdraw all token balance in the contract
-    function withdrawToken(address token, address to) public {
+    function withdrawToken(address token, address to) external {
         require(token != address(0), "invalid_token_address");
         require(to != address(0), "invalid_recipient_address");
         require(
@@ -220,7 +220,7 @@ contract GSRChallenge2PoolArbitrage {
         address token1,
         uint256 amountIn,
         address routerAdd
-    ) public returns (uint256 amount1) {
+    ) internal returns (uint256 amount1) {
         require(amountIn > 0, "invalid_amount");
         require(routerAdd != address(0), "invalid_address");
         require(
@@ -248,7 +248,7 @@ contract GSRChallenge2PoolArbitrage {
         address _token0,
         address _token1,
         address _factory
-    ) public view returns (address pool) {
+    ) internal view returns (address pool) {
         require(
             _token0 != _token1 &&
                 _token0 != address(0) &&
@@ -267,7 +267,7 @@ contract GSRChallenge2PoolArbitrage {
         address _token0,
         address _token1,
         address factory
-    ) public view returns (uint256) {
+    ) internal view returns (uint256) {
         require(
             _token0 != address(0) &&
                 _token1 != address(0) &&
@@ -292,7 +292,7 @@ contract GSRChallenge2PoolArbitrage {
         address _token1,
         address routerAdd,
         uint256 amountIn
-    ) public view returns (uint256) {
+    ) internal view returns (uint256) {
         require(
             _token0 != address(0) &&
                 _token1 != address(0) &&
