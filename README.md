@@ -52,7 +52,7 @@ Arbitrage profit of <ARB_PROFIT> <TOKEN0> exists between <TOKEN0>, <TOKEN1> and 
 
 Note that if liquidity pool does not exist between 2 tokens (ie. pair address = address(0)), then the functions ``getMaxArbitrage3Tokens`` and ``getMaxArbitragePossible`` will revert.
 
-1. If you run ``executeArb``, the function will execute the arb between 2 Dexes' liquidity pools. It will first calculate the price differential and then it will proceed to execute the arbitrage if the price differential is greater than 1%. It will then compare the output of token0 before and after the arbitrage, and revert with "not_profitable" if it is not profitable due to price slippage.
+5. If you run ``executeArb``, the function will execute the arb between 2 Dexes' liquidity pools. It will first calculate the price differential and then it will proceed to execute the arbitrage if the price differential is greater than 1%. It will then compare the output of token0 before and after the arbitrage, and revert with "not_profitable" if it is not profitable due to price slippage.
 
 ## Execute on Rinkeby testnet
 You can execute the functions in the smart contract on Rinkeby testnet through the steps below:
