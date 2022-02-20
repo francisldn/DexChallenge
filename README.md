@@ -40,7 +40,6 @@ Note: there was an arb opportunity found among WETH-LINK-DAI tokens at block 142
 ```
 npx hardhat run scripts/arb.js --network hardhat
 ```
-
 4. If you execute ``getMaxArbitragePossible``, you should be able to see the following message in terminal if a liquidity pool exists between the token pair on Dex0 and Dex1
 
 ```
@@ -51,7 +50,9 @@ If you execute ``getMaxArbitrage3Tokens``, you will see the folllowing message i
 Arbitrage profit of <ARB_PROFIT> <TOKEN0> exists between <TOKEN0>, <TOKEN1> and <TOKEN2>. Remaining token0 balance of <TOKEN0_REMAINING_BALANCE> after arbitrage.
 ```
 
-5. If you run ``executeArb``, the function will execute the arb between 2 Dexes' liquidity pools. It will first calculate the price differential and then it will proceed to execute the arbitrage if the price differential is greater than 1%. It will then compare the output of token0 before and after the arbitrage, and revert with "not_profitable" if it is not profitable due to price slippage.
+Note that if liquidity pool does not exist between 2 tokens (ie. pair address = address(0)), then the functions ``getMaxArbitrage3Tokens`` and ``getMaxArbitragePossible`` will revert.
+
+1. If you run ``executeArb``, the function will execute the arb between 2 Dexes' liquidity pools. It will first calculate the price differential and then it will proceed to execute the arbitrage if the price differential is greater than 1%. It will then compare the output of token0 before and after the arbitrage, and revert with "not_profitable" if it is not profitable due to price slippage.
 
 ## Execute on Rinkeby testnet
 You can execute the functions in the smart contract on Rinkeby testnet through the steps below:
