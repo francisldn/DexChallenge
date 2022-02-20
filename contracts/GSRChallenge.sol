@@ -205,7 +205,7 @@ contract GSRChallenge2PoolArbitrage {
     }
 
     ///@notice enable user to deposit tokens to the contract
-    function _depositToken(address token, uint256 amount) public {
+    function _depositToken(address token, uint256 amount) external {
         require(token != address(0), "invalid_token_address");
         require(amount > 0, "invalid_deposit_amount");
         require(
