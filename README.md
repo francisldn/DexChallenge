@@ -31,7 +31,7 @@ module.exports = {
 ```
 2. Go to ``arb_testnet.js`` file in the ``scripts`` folder, specify the token pair that you wish to run arbitrage against at line 11-12 of the script. The list of token pairs available to run on Rinkeby testnet (as well as mainnet) can be found in ``Addresses/tokens.json`` file. 
    
-3. An instance of the contract has been deployed on Rinkeby testnet at ``0x6f5dfAE57320af88fCa2C32Fe71D82af6Db38BFf``. Run ``arb_testnet.js`` file in the ``scripts`` folder, as below. This will trigger the execution of ``getMaxArbitragePossible`` function. You can also run ``executeArb`` function if you wish to do so.
+3. An instance of the contract has been deployed on Rinkeby testnet at ``0x24B1fD5b63689e085E6510AdF0087993482Ab9b2``. Run ``arb_testnet.js`` file in the ``scripts`` folder, as below. This will trigger the execution of ``getMaxArbitragePossible`` function. You can also run ``executeArb`` function if you wish to do so.
 ```
 npx hardhat run scripts/arb_testnet.js --network rinkeby
 ```
@@ -40,7 +40,7 @@ npx hardhat run scripts/arb_testnet.js --network rinkeby
 ```
 Arbitrage profit of <ARB> exists between <TOKEN0> and <TOKEN1>. <TOKEN0>/<TOKEN1> price is <PRICE0> on Dex0 and <PRICE1> on Dex1
 ```
-
+5. If you run ``executeArb``, the function will first calculate the price differential and it will proceed to execute the arbitrage if the price differential is greater than 1%. It will then compare the output of token0 after the arbitrage vs before, and revert with "not_profitable" if it is not profitable due to price slippage.
 ## Execute on Mainnet Fork
 1. Follow the step 1 above to configure networks, specifically forking the mainnet, and then go to ``arb.js`` file in the ``scripts`` folder. Specify the token pair that you wish to run arbitrage against at line 11-12 of the script. You can find the list of token pairs available to run on mainnet in ``Addresses/tokens.json`` file.
 
@@ -48,7 +48,7 @@ Arbitrage profit of <ARB> exists between <TOKEN0> and <TOKEN1>. <TOKEN0>/<TOKEN1
 ```
 npx hardhat run scripts/arb.js --network hardhat
 ```
-3. Once executed, you should be able to see the same message as step 4 above.
+3. Once executed, you should be able to see the same message as steps 4 and 5 above.
 
 # Addresses
 * ``Addresses/factory.json`` contains UniSwap and SushiSwap factory addresses on Mainnet and Rinkeby testnet

@@ -121,10 +121,9 @@ contract GSRChallenge2PoolArbitrage {
             : ((price1 - price0) * 100) / price1;
         // to check that price differential is greater than 1%
         require(arbitrage > 1, "no_arbitrage");
-        require(
-            ERC20(_token0).balanceOf(address(this)) >= _amount0,
-            "insufficient_fund"
-        );
+        uint256 balBeforeArb = ERC20(_token0).balanceOf(address(this));
+        require(balBeforeArb >= _amount0, "insufficient_fund");
+        // amount of token1 from swap
         uint256 _amount1;
         if (price0 > price1) {
             // sell token0 and swap for token1 at dex0
@@ -139,11 +138,9 @@ contract GSRChallenge2PoolArbitrage {
             _swapToken(_token1, _token0, _amount1, _router0);
             amountOut = ERC20(_token0).balanceOf(address(this));
         }
-        if (amountOut <= _amount0) {
-            arbProfit = 0;
-        } else if (amountOut > _amount0) {
-            arbProfit = amountOut - _amount0;
-        }
+        // revert if amountOut is less than balBeforeArb
+        require(amountOut >= balBeforeArb, "not_profitable");
+        arbProfit = amountOut - _amount0;
     }
 
     ///@notice enable user to withdraw all token balance in the contract

@@ -9,7 +9,7 @@ const web3 = require('web3');
 let contractABI = GSRChallenge2PoolArbitrage.abi;
 let contractByteCode = GSRChallenge2PoolArbitrage.bytecode;
 let token0 = tokens.mainnet.WETH;
-let token1 = tokens.mainnet.AAVE;
+let token1 = tokens.mainnet.POOL;
 let factory0 = factory.mainnet.Uniswap;
 let factory1 = factory.mainnet.Sushiswap;
 let router0 = router.mainnet.Uniswap;
@@ -86,5 +86,5 @@ async function executeArb(token0, token1, router0, router1, signerAdd, amount) {
         
 }
 
-getMaxArbitragePossible(token0, token1, router0, router1, amount0);
-// executeArb(token0, token1, router0, router1, Cynthia_WETH, amount0);
+// getMaxArbitragePossible(token0, token1, router0, router1, amount0);
+executeArb(token0, token1, router0, router1, Cynthia_WETH, amount0);

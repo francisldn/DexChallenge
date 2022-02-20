@@ -5,11 +5,12 @@ const router = require('../Addresses/router.json');
 const factory = require('../Addresses/factory.json');
 const tokens = require('../Addresses/tokens.json');
 const web3 = require('web3');
+const {BigNumber} = require('ethers');
 
-const contractAdd = '0x6f5dfAE57320af88fCa2C32Fe71D82af6Db38BFf'
+const contractAdd = '0x24B1fD5b63689e085E6510AdF0087993482Ab9b2'
 let contractABI = GSRChallenge2PoolArbitrage.abi;
 let token0 = tokens.rinkeby.WETH;
-let token1 = tokens.rinkeby.UNI;
+let token1 = tokens.rinkeby.LINK;
 let factory0 = factory.rinkeby.Uniswap;
 let factory1 = factory.rinkeby.Sushiswap;
 let router0 = router.rinkeby.Uniswap;
@@ -62,19 +63,58 @@ async function executeArb(token0, token1, router0, router1, amount) {
         console.log(`Initial ${tokenSymbol0} balance of ${Number(token0BalBefore)/1e18} before arb.` )
         result = await contract.connect(signer).executeArb(token0, token1, router0, router1, amount);
         await result.wait(2);
-        
-        token0BalAfter = await contract.getTokenBalance(token0);
-        await contract.connect(signer).withdrawToken(token0,signer.address);
-        profit = (Number(token0BalAfter) - Number(token0BalBefore))/1e18; 
-
-        console.log(`You have a ${tokenSymbol0} balance of ${(Number(token0BalAfter)/1e18).toFixed(4)} after executing arb.` )
-        console.log(`You have made ${profit.toFixed(4)} in profit.`)
-
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
-        
+    token0BalAfter = await contract.getTokenBalance(token0);
+    await contract.connect(signer).withdrawToken(token0,signer.address);
+    profit = (Number(token0BalAfter) - Number(token0BalBefore))/1e18; 
+    console.log(`You have a ${tokenSymbol0} balance of ${(Number(token0BalAfter)/1e18).toFixed(4)} after executing arb.` )
+    console.log(`You have made ${profit.toFixed(4)} in profit.`)
 }
 
-getMaxArbitragePossible(token0, token1, router0, router1, amount0);
-// executeArb(token0, token1, router0, router1, amount0);
+// loop doesn't work - need to look into it
+async function executeMultiArb() {
+    /* Getting the signer of the current account. */
+    const [signer] = await ethers.getSigners(); 
+    const contract = new ethers.Contract(contractAdd, contractABI, signer);
+    let tokenA = tokens.rinkeby.WETH;
+    let tokenB;
+    let result;
+    let token0BalBefore;
+    let token0BalAfter;
+    let profit;
+    let tokenSymbolA;
+    let tokenSymbolB;
+    let tokenContractA;
+    let tokenContractB;
+    for (let token in tokens['rinkeby']) {
+        tokenB = tokens['rinkeby'][token];
+        tokenContractA = new ethers.Contract(tokenA, tokenContract.abi, signer); 
+        tokenContractB = new ethers.Contract(tokenB, tokenContract.abi, signer);
+        tokenSymbolA = await tokenContractA.symbol();
+        tokenSymbolB = await tokenContractB.symbol();
+        let tx = await tokenContractA.connect(signer).approve(contract.address, amount0);
+        tx.wait(1);
+        tx = await contract.connect(signer)._depositToken(tokenA, amount0);
+        tx.wait(1);
+        token0BalBefore = await contract.getTokenBalance(tokenA);
+        console.log(`Initial ${tokenSymbolA} balance of ${Number(token0BalBefore)/1e18} before arb.` )
+        try {
+            result = await contract.connect(signer).executeArb(tokenA, tokenB, router0, router1, amount);
+            await result.wait(2);
+        } catch (error) {
+            continue;
+        }
+        token0BalAfter = await contract.getTokenBalance(tokenA);
+        await contract.connect(signer).withdrawToken(tokenA,signer.address);
+        profit = (Number(token0BalAfter) - Number(token0BalBefore))/1e18; 
+        console.log(`You have a ${tokenSymbolA} balance of ${(Number(token0BalAfter)/1e18).toFixed(4)} after executing arb.` )
+        console.log(`You have made ${profit.toFixed(4)} in profit.`)
+    }
+}
+
+
+// getMaxArbitragePossible(token0, token1, router0, router1, amount0);
+executeArb(token0, token1, router0, router1, amount0);
+// executeMultiArb()
