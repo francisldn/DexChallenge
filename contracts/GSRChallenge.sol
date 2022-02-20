@@ -1,6 +1,5 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.7;
-
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 interface IUniswapV2Pair {
@@ -85,6 +84,52 @@ contract GSRChallenge2PoolArbitrage {
         price1 = _getPrice2(_token0, _token1, _router1, _amount0In);
         require(price0 > 0 && price1 > 0, "invalid_prices");
         arb = price0 >= price1 ? (price0 - price1) : (price1 - price0);
+    }
+
+    /// @notice enable user to calculate max arbitrage among 3 tokens from 3 liquidity pools within 1 Dex
+    /// @param _token0 address of token0
+    /// @param _token1 address of token1
+    /// @param _token2 address of token3
+    /// @param _router address of Dex router
+    /// @param amountIn input amount of token0, amount can have implications on the slippage
+    function maxArbitrage3Tokens(
+        address _token0,
+        address _token1,
+        address _token2,
+        address _router,
+        uint256 amountIn
+    ) public view returns (uint256 arbProfit, uint256 newToken0Balance) {
+        require(
+            _token0 != address(0) &&
+                _token1 != address(0) &&
+                _token2 != address(0),
+            "invalid_token_address"
+        );
+        require(amountIn > 0, "invalid_input_amount");
+        require(_router != address(0), "invalid_router_address");
+        IUniswapV2Router02 router = IUniswapV2Router02(_router);
+
+        address[] memory path0 = new address[](2);
+        path0[0] = _token0;
+        path0[1] = _token1;
+        address[] memory path1 = new address[](2);
+        path1[0] = _token1;
+        path1[1] = _token2;
+        address[] memory path2 = new address[](2);
+        path2[0] = _token2;
+        path2[1] = _token0;
+
+        // getAmountsOut returns amountIn and amountOut
+        uint256[] memory result0 = router.getAmountsOut(amountIn, path0);
+        uint256[] memory result1 = router.getAmountsOut(result0[1], path1);
+        uint256[] memory result2 = router.getAmountsOut(result1[1], path2);
+
+        newToken0Balance = result2[1];
+        if (newToken0Balance > amountIn) {
+            arbProfit = newToken0Balance - amountIn;
+        } else {
+            arbProfit = 0;
+        }
     }
 
     ///@notice enable user to execute arbitrage of a token pair between 2 Dexes
