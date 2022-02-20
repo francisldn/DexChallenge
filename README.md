@@ -1,6 +1,7 @@
-# Arbitrage Between 2 DEXes
+# Arbitrage Between Tokens, Pools and DEXes
 ``GSRChallenge.sol`` is a contract that can 
-* get the max arbitrage between 2 DEX's liquidity pools using ``maxArbitragePossible`` function
+* get the max arbitrage between 2 DEX's liquidity pools (2 tokens) using ``maxArbitragePossible`` function
+* get the max arbitrage among 3 tokens from 3 liquidity pools within the same Dex using ``maxArbitrage3Tokens`` function
 * execute arbitrage between 2 DEX's liqudity pools using `executeArb` function
 
 # How to Start
@@ -9,46 +10,52 @@
 3. Run ``npm install`` to install all the dependencies
 4. Then follow the steps below to execute the scripts in the scripts folder
 
-# How to execute
-## Execute on Rinkeby testnet
-You can execute the functions in the smart contract on Rinkeby testnet through the steps below:
+# Interact with Contract on Mainnet Fork and Testnet
+## Execute on Mainnet Fork
 1. Configure networks in the ``hardhat.config.js`` file, as below. Set up a ``.env`` file to store ``ALCHEMY_API_KEY`` and ``PRIVATE_KEY``
 ```
 module.exports = {
   defaultNetwork:'hardhat',
   networks: {
     hardhat: {
-      forking: {
-        url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
-      } 
+        forking: {
+            url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
+            accounts: [process.env.PRIVATE_KEY],
+            gas: 30000000,
+            blockNumber: 14243327
+        },
     },
     rinkeby: {
       url: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
-      accounts: [process.env.PRIVATE_KEY]
-    }
-  }
+      accounts: [process.env.PRIVATE_KEY],
+      gas: 30000000
+    },
 }
 ```
-2. Go to ``arb_testnet.js`` file in the ``scripts`` folder, specify the token pair that you wish to run arbitrage against at line 11-12 of the script. The list of token pairs available to run on Rinkeby testnet (as well as mainnet) can be found in ``Addresses/tokens.json`` file. 
-   
-3. An instance of the contract has been deployed on Rinkeby testnet at ``0x24B1fD5b63689e085E6510AdF0087993482Ab9b2``. Run ``arb_testnet.js`` file in the ``scripts`` folder, as below. This will trigger the execution of ``getMaxArbitragePossible`` function. You can also run ``executeArb`` function if you wish to do so.
+2. After configuring mainnet fork setting, go to ``arb.js`` file in the ``scripts`` folder. Specify the token pair that you wish to run arbitrage against at line 11-12 of the script. You can find the list of token pairs available to run on mainnet in ``Addresses/tokens.json`` file.
+Note: there was an arb opportunity found among WETH-LINK-DAI tokens at block 14243327 on the mainnet - hence the blockNumber is set to the block.
+
+3. Execute the command below to run the ``arb.js`` script in mainnet fork. The command will create a local instance of the contract and execute ``getMaxArbitrage3Tokens`` or ``getMaxArbitragePossible`` functions. You can also run ``executeArb`` function if you wish to take advantage of the arb between 2 Dexes' liqudity pools.
 ```
-npx hardhat run scripts/arb_testnet.js --network rinkeby
+npx hardhat run scripts/arb.js --network hardhat
 ```
+
 4. Once executed, you should be able to see the following message in terminal if a liquidity pool exists between the token pair on Dex0 and Dex1
 
 ```
 Arbitrage profit of <ARB> exists between <TOKEN0> and <TOKEN1>. <TOKEN0>/<TOKEN1> price is <PRICE0> on Dex0 and <PRICE1> on Dex1
 ```
-5. If you run ``executeArb``, the function will first calculate the price differential and it will proceed to execute the arbitrage if the price differential is greater than 1%. It will then compare the output of token0 after the arbitrage vs before, and revert with "not_profitable" if it is not profitable due to price slippage.
-## Execute on Mainnet Fork
-1. Follow the step 1 above to configure networks, specifically forking the mainnet, and then go to ``arb.js`` file in the ``scripts`` folder. Specify the token pair that you wish to run arbitrage against at line 11-12 of the script. You can find the list of token pairs available to run on mainnet in ``Addresses/tokens.json`` file.
+5. If you run ``executeArb``, the function will execute the arb between 2 Dexes' liquidity pools. It will first calculate the price differential and then it will proceed to execute the arbitrage if the price differential is greater than 1%. It will then compare the output of token0 before and after the arbitrage, and revert with "not_profitable" if it is not profitable due to price slippage.
 
-2. Execute the command below to run the ``arb.js`` script in mainnet fork. The command will create a local instance of the contract and execute ``getMaxArbitragePossible`` function. You can also run ``executeArb`` function if you wish to do so.
+## Execute on Rinkeby testnet
+You can execute the functions in the smart contract on Rinkeby testnet through the steps below:
+1. Follow step 1 above to configure Rinkeby testnet.
+2. Go to ``arb_testnet.js`` file in the ``scripts`` folder, specify the token pair that you wish to run arbitrage against at line 11-12 of the script. The list of token pairs available to run on Rinkeby testnet (as well as mainnet) can be found in ``Addresses/tokens.json`` file. 
+3. An instance of the contract has been deployed on Rinkeby testnet at ``0x350b4a1c43d42ccc8e5EE1552682D466Bc560840``. Run ``arb_testnet.js`` file in the ``scripts`` folder, as below. This will trigger the execution of ``getMaxArbitragePossible`` function. You can also run ``executeArb`` function if you wish to do so.
 ```
-npx hardhat run scripts/arb.js --network hardhat
+npx hardhat run scripts/arb_testnet.js --network rinkeby
 ```
-3. Once executed, you should be able to see the same message as steps 4 and 5 above.
+Note: there was an [arb opportunity](https://rinkeby.etherscan.io/tx/0xbaab47951c0d1c28fdd80b0f5dba1cf0c57d303173d87a5f67474d2f68a6ee1e) found and executed on Rinkeby testnet on block 10201359 between WETH-LINK tokens 
 
 # Addresses
 * ``Addresses/factory.json`` contains UniSwap and SushiSwap factory addresses on Mainnet and Rinkeby testnet
@@ -57,5 +64,3 @@ npx hardhat run scripts/arb.js --network hardhat
 
 For mainnet forking purpose, a number of impersonated accounts have been used to run arbitrage, such as 
 * Cynthia_WETH: ``0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2`` for WETH token
-* Bob_BAT: ``0xd265a63806064885acb25e99ccbb76a3e7c96f4f`` for BAT token
-* Alice_DAI: ``0x6B175474E89094C44Da98b954EedeAC495271d0F`` for DAI token
