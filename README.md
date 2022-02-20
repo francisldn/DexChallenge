@@ -58,7 +58,7 @@ Note that if liquidity pool does not exist between 2 tokens (ie. pair address = 
 You can execute the functions in the smart contract on Rinkeby testnet through the steps below:
 1. Follow step 1 above to configure Rinkeby testnet.
 2. Go to ``arb_testnet.js`` file in the ``scripts`` folder, specify the token pair that you wish to run arbitrage against at line 11-12 of the script. The list of token pairs available to run on Rinkeby testnet (as well as mainnet) can be found in ``Addresses/tokens.json`` file. 
-3. An instance of the contract has been deployed on Rinkeby testnet at ``0x350b4a1c43d42ccc8e5EE1552682D466Bc560840``. Run ``arb_testnet.js`` file in the ``scripts`` folder, as below. This will trigger the execution of ``getMaxArbitragePossible`` function. You can also run ``executeArb`` function if you wish to do so.
+3. An instance of the contract has been deployed on Rinkeby testnet at [``0x7F2fc6DE2F4Aee559005c0e5430ab1C6681E74e4``](https://rinkeby.etherscan.io/address/0x7F2fc6DE2F4Aee559005c0e5430ab1C6681E74e4). Run ``arb_testnet.js`` file in the ``scripts`` folder, as below. This will trigger the execution of ``getMaxArbitragePossible`` function. You can also run ``executeArb`` function if you wish to do so.
 ```
 npx hardhat run scripts/arb_testnet.js --network rinkeby
 ```
